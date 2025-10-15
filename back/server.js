@@ -46,6 +46,18 @@ app.get('/', (req, res) => {
     });
 });
 
+const { sendVerificationEmail } = require('./utils/emailService');
+
+app.get('/api/test-email', async (req, res) => {
+    try {
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        await sendVerificationEmail(process.env.EMAIL_USER, 'Tester', otp);
+        res.json({ success: true, message: 'Test email sent successfully!' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 // Handle 404 routes
 app.use((req, res) => {
     res.status(404).json({
